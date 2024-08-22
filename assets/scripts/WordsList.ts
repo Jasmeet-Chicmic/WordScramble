@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, Label, Node, Prefab } from 'cc';
+import { _decorator, Component, director, instantiate, Label, Node, Prefab } from 'cc';
 import { WordName } from './WordName';
 const { ccclass, property } = _decorator;
 
@@ -9,6 +9,13 @@ export class WordsList extends Component {
 
     @property({ type: Node })
     mainNode: Node = null;
+
+
+    protected onLoad(): void {
+        director.on("onWin", (index) => {
+            this.mainNode.children[index].getComponent(WordName).onWin()
+        })
+    }
 
     /**
      * 

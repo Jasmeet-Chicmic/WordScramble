@@ -1,4 +1,4 @@
-import { _decorator, Component, Game, instantiate, Node, Prefab } from 'cc';
+import { _decorator, Component, director, Game, instantiate, Node, Prefab, UITransform, Vec2, Vec3 } from 'cc';
 import { GameData } from '../../constants/GameConfig';
 import { GridNode } from './GridNode';
 const { ccclass, property } = _decorator;
@@ -8,11 +8,192 @@ export class Gird extends Component {
     @property({ type: Prefab })
     gridNode: Node = null;
 
+    @property({ type: Node })
+    gameOverNode = null;
+
     matrix = []
     MATRIX_ROW_MAX = GameData.gridSizeRow;
     MATRIX_COL_MAX = GameData.gridSizeCol;
+    touchCancle = false;
+    protected onLoad(): void {
+        this.gameOverNode.active = false;
+        this.node.on(Node.EventType.TOUCH_START, (e) => {
+
+            this.onTouchBegan(e);
+        })
+        this.node.on(Node.EventType.TOUCH_MOVE, (e) => {
+
+            this.onTouchMoved(e);
+        })
+        this.node.on(Node.EventType.TOUCH_END, (e) => {
+
+            this.onTouchEnded();
+        })
+        this.node.on(Node.EventType.TOUCH_CANCEL, (e) => {
+            this.clearHighlight()
+
+        })
+
+    }
+    isGameOver = false;
+    selectFrom = null;
+    found = 0
+    selected = []
+    getItems(rowFrom, colFrom, rowTo, colTo) {
+        var items = [];
+
+        if (
+            rowFrom === rowTo ||
+            colFrom === colTo ||
+            Math.abs(rowTo - rowFrom) == Math.abs(colTo - colFrom)
+        ) {
+            var shiftY = rowFrom === rowTo ? 0 : rowTo > rowFrom ? 1 : -1,
+                shiftX = colFrom === colTo ? 0 : colTo > colFrom ? 1 : -1,
+                row = rowFrom,
+                col = colFrom;
+
+            items.push(this.getItem(row, col));
+            do {
+                row += shiftY;
+                col += shiftX;
+                items.push(this.getItem(row, col));
+            } while (row !== rowTo || col !== colTo);
+        }
+        // console.log("Items", items);
+
+        return items;
+    }
+
+    getItem(row, col) {
+        return this.matrix[row] ? this.matrix[row][col] : undefined;
+    }
+    clearHighlight() {
+
+        for (var i = 0; i < this.selected.length; i++) {
+
+            let current = this.selected[i]
+            if (current) {
+                let row = current?.row
+                let col = current?.col;
+
+                this.matrix[row][col].node.getComponent(GridNode).unselectGrid()
+            }
+            //   var boxSprite = this.getChildByTag(this.matrix[row][col].boxTag);
+            //   boxSprite.setTexture(
+            //     cc.Sprite.create(this.matrix[row][col].boxSpriteName).getTexture()
+            //   );
+
+            //   var alphabetLabel = boxSprite.getChildByTag(this.matrix[row][col].boxTag);
+            //   alphabetLabel.setColor(new cc.Color3B(0, 0, 0));
+        }
+
+    }
+    onTouchMoved(touch) {
+        if (this.selectFrom) {
+            this.clearHighlight();
+            var grid = this.calculateGridNumber(touch);
+            this.selected = this.getItems(
+                this.selectFrom.row,
+                this.selectFrom.col,
+                grid.y,
+                grid.x
+            );
+
+            // console.log("Select", this.selected);
+            for (var i = 0; i < this.selected.length; i++) {
+                var current = this.selected[i];
+                if (current) {
+                    let row = current.row;
+                    let col = current.col;
 
 
+
+                    this.matrix[row][col].node.getComponent(GridNode).updateData()
+
+                }// var boxSprite = this.getChildByTag(this.matrix[row][col].boxTag);
+                // boxSprite.setTexture(cc.Sprite.create(s_SelectedBox).getTexture());
+
+                // var alphabetLabel = boxSprite.getChildByTag(
+                //   this.matrix[row][col].boxTag
+                // );
+                // alphabetLabel.setColor(new cc.Color3B(255, 255, 255));
+
+
+            }
+
+        }
+    }
+    lookup(selected) {
+        var words = [""];
+
+        for (var i = 0; i < selected.length; i++) {
+            words[0] += selected[i].letter;
+        }
+        words.push(words[0].split("").reverse().join(""));
+
+        if (
+            GameData.words.indexOf(words[0]) > -1 ||
+            GameData.words.indexOf(words[1]) > -1
+        ) {
+            this.found++;
+            for (var i = 0; i < selected.length; i++) {
+                var row = selected[i].row,
+                    col = selected[i].col;
+                this.matrix[row][col].node.getComponent(GridNode).onWin()
+                // var boxSprite   = this.getChildByTag(this.matrix[row][col].boxTag);
+                // boxSprite.setTexture(cc.Sprite.create(s_CorrectBox).getTexture());
+                // this.matrix[row][col].boxSpriteName = s_CorrectBox;
+
+                // var alphabetLabel = boxSprite.getChildByTag(
+                //   this.matrix[row][col].boxTag
+                // );
+                // alphabetLabel.setColor(new cc.Color3B(0, 0, 0));
+
+                var wordIndex;
+                if (GameData.words.indexOf(words[0]) > -1) {
+                    wordIndex = GameData.words.indexOf(words[0]);
+                } else if (GameData.words.indexOf(words[1]) > -1) {
+                    wordIndex = GameData.words.indexOf(words[1]);
+                }
+                console.log(wordIndex);
+                director.emit("onWin", wordIndex)
+                // var answerLabel = this.getChildByTag(answerLabelTag + wordIndex);
+                // //                answerLabel.setOpacity(0.8);
+                // answerLabel.setColor(new cc.Color3B(0, 255, 0));
+
+
+            }
+        }
+    }
+    onTouchEnded() {
+        this.selectFrom = null;
+        this.clearHighlight();
+        this.lookup(this.selected);
+        this.selected = [];
+
+        if (GameData.words.length === this.found) {
+            console.log("Game Over");
+            this.gameOverNode.active = true
+            // this.addGameOver();
+        }
+    }
+    calculateGridNumber(touch) {
+        var touchLocation = touch.getUILocation();
+        const position = this.node.getComponent(UITransform).convertToNodeSpaceAR(new Vec3(touchLocation.x, touchLocation.y, 0));
+        var grid = new Vec2(Math.floor((position.x) / 40), Math.floor((position.y) / 40))
+        return grid;
+    }
+    onTouchBegan(touch) {
+
+        if (!this.isGameOver) {
+            var grid = this.calculateGridNumber(touch);
+            // console.log(grid);
+            // console.log(this.matrix);
+            //change y with x
+            this.selectFrom = this.matrix[grid.y][grid.x];
+        }
+
+    }
     protected start(): void {
         var isWorked = false;
         while (isWorked == false) {
@@ -45,6 +226,7 @@ export class Gird extends Component {
         for (let row = 0; row < this.MATRIX_ROW_MAX; row++) {
             for (let col = 0; col < this.MATRIX_COL_MAX; col++) {
                 const gridNode = instantiate(this.gridNode)
+                this.matrix[row][col].node = gridNode;
                 gridNode.getComponent(GridNode).setData(this.matrix[row][col].letter.toUpperCase(), col, row);
                 this.node.addChild(gridNode)
             }
@@ -65,7 +247,8 @@ export class Gird extends Component {
                     row: row,
                     col: col,
                     boxTag: -1,
-                    boxSpriteName: "."
+                    boxSpriteName: ".",
+                    node: null
                 }
                 if (!this.matrix[row]) {
                     this.matrix[row] = [];
