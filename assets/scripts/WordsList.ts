@@ -1,5 +1,6 @@
 import { _decorator, Component, director, instantiate, Label, Node, Prefab } from 'cc';
 import { WordName } from './WordName';
+import { GameEvent } from '../constants/GameConfig';
 const { ccclass, property } = _decorator;
 
 @ccclass('WordsList')
@@ -12,7 +13,7 @@ export class WordsList extends Component {
 
 
     protected onLoad(): void {
-        director.on("onWin", (index) => {
+        director.on(GameEvent.ON_SELECT, (index) => {
             this.mainNode.children[index].getComponent(WordName).onWin()
         })
     }

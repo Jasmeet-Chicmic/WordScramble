@@ -1,5 +1,5 @@
 import { _decorator, Component, director, Game, instantiate, Node, Prefab, UITransform, Vec2, Vec3 } from 'cc';
-import { GameData } from '../../constants/GameConfig';
+import { GameData, GameEvent } from '../../constants/GameConfig';
 import { GridNode } from './GridNode';
 const { ccclass, property } = _decorator;
 
@@ -110,13 +110,7 @@ export class Gird extends Component {
 
                     this.matrix[row][col].node.getComponent(GridNode).updateData()
 
-                }// var boxSprite = this.getChildByTag(this.matrix[row][col].boxTag);
-                // boxSprite.setTexture(cc.Sprite.create(s_SelectedBox).getTexture());
-
-                // var alphabetLabel = boxSprite.getChildByTag(
-                //   this.matrix[row][col].boxTag
-                // );
-                // alphabetLabel.setColor(new cc.Color3B(255, 255, 255));
+                }
 
 
             }
@@ -140,23 +134,14 @@ export class Gird extends Component {
                 var row = selected[i].row,
                     col = selected[i].col;
                 this.matrix[row][col].node.getComponent(GridNode).onWin()
-                // var boxSprite   = this.getChildByTag(this.matrix[row][col].boxTag);
-                // boxSprite.setTexture(cc.Sprite.create(s_CorrectBox).getTexture());
-                // this.matrix[row][col].boxSpriteName = s_CorrectBox;
-
-                // var alphabetLabel = boxSprite.getChildByTag(
-                //   this.matrix[row][col].boxTag
-                // );
-                // alphabetLabel.setColor(new cc.Color3B(0, 0, 0));
-
                 var wordIndex;
                 if (GameData.words.indexOf(words[0]) > -1) {
                     wordIndex = GameData.words.indexOf(words[0]);
                 } else if (GameData.words.indexOf(words[1]) > -1) {
                     wordIndex = GameData.words.indexOf(words[1]);
                 }
-                console.log(wordIndex);
-                director.emit("onWin", wordIndex)
+             
+                director.emit(GameEvent.ON_SELECT, wordIndex)
                 // var answerLabel = this.getChildByTag(answerLabelTag + wordIndex);
                 // //                answerLabel.setOpacity(0.8);
                 // answerLabel.setColor(new cc.Color3B(0, 255, 0));
@@ -172,9 +157,8 @@ export class Gird extends Component {
         this.selected = [];
 
         if (GameData.words.length === this.found) {
-            console.log("Game Over");
             this.gameOverNode.active = true
-            // this.addGameOver();
+            
         }
     }
     calculateGridNumber(touch) {

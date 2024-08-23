@@ -1,6 +1,6 @@
 import { _decorator, Component, director, Node } from 'cc';
 import { WordsList } from './WordsList';
-import { GameData } from '../constants/GameConfig';
+import { GameData, GameEvent } from '../constants/GameConfig';
 const { ccclass, property } = _decorator;
 
 @ccclass('Gameplay')
@@ -11,12 +11,13 @@ export class Gameplay extends Component {
 
 
 
-    protected onLoad(): void {
-
-    }
     start() {
-
         this.wordsList.getComponent(WordsList).addWords(GameData.words);
+    }
+
+    playAgain() {
+        director.off(GameEvent.ON_SELECT);
+        director.loadScene("gameplay")
     }
 
     update(deltaTime: number) {

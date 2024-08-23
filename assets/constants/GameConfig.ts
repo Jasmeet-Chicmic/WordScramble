@@ -10,3 +10,7 @@ export const GameData = {
 }
 
 
+export const GameEvent = {
+        ON_SELECT: "ON_SELECT"
+}
+

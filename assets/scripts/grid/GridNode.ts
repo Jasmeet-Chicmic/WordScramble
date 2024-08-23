@@ -21,8 +21,8 @@ export class GridNode extends Component {
     position = { col: 0, row: 0 };
     letter = '';
 
-    whiteColor = new Color("white")
-    blackColor = new Color("black")
+    whiteColor = new Color("#ffffff")
+    blackColor = new Color("#000000")
     protected onLoad(): void {
         // this.node.on(Node.EventType.TOUCH_START, () => {
         //     console.log("grid position", this.position, "Letter", this.letter);
@@ -43,12 +43,12 @@ export class GridNode extends Component {
 
     updateData() {
         this.selecdNode.active = true;
-        // this.alphabet.getComponent(Label).color = this.whiteColor;
+        this.alphabet.getComponent(Label).color = this.whiteColor;
     }
 
     unselectGrid() {
         this.selecdNode.active = false;
-        // this.alphabet.getComponent(Label).color = this.blackColor;
+        this.alphabet.getComponent(Label).color = this.blackColor;
     }
 
 
