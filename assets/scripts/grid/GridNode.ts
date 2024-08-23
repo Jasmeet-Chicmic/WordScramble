@@ -32,7 +32,7 @@ export class GridNode extends Component {
     setData(name: string, col, row) {
         this.node.getComponent(Sprite).spriteFrame = this.gridSprites[randomRangeInt(0, 4)]
         this.node.setPosition(
-            this.positionAdjustment + col * this.node.getComponent(UITransform).width,
+            (this.positionAdjustment - 2) + col * this.node.getComponent(UITransform).width,
             this.positionAdjustment + row * this.node.getComponent(UITransform).height
         );
         this.alphabet.getComponent(Label).string = name;
