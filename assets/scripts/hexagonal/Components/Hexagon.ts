@@ -188,17 +188,18 @@ export default class Hexagon extends Component {
 			this.locked = true;
 			this.content = replace;
 			this.node.setPosition(new Vec3(this.orgPos.x, this.node.getPosition().y));
+			console.log(PlayerTag.me);
 
 			let posMe = this.node.parent.getComponent(UITransform).convertToNodeSpaceAR(PlayerTag.me.node.parent.getComponent(UITransform).convertToWorldSpaceAR(PlayerTag.me.node.getPosition()));
-			let posOpponent = this.node.parent.getComponent(UITransform).convertToNodeSpaceAR(PlayerTag.opponent.node.parent.getComponent(UITransform).convertToWorldSpaceAR(PlayerTag.opponent.node.getPosition()));
-			let pos = me ? posMe : posOpponent;
-
+			// let posOpponent = this.node.parent.getComponent(UITransform).convertToNodeSpaceAR(PlayerTag.opponent.node.parent.getComponent(UITransform).convertToWorldSpaceAR(PlayerTag.opponent.node.getPosition()));
+			// let pos = me ? posMe : posOpponent;
+			let pos = posMe;
 			// Tween the node
 			tween(this.node)
 				.delay(Math.random() * 0.1)
 				.to(0.2, { position: new Vec3(this.node.getPosition().x, this.node.getPosition().y + 10) }, { easing: 'cubicIn' })
 				.delay(0.1 + Math.random() * 0.2)
-				.to(0.5, { position: new Vec3(pos.x, pos.y), scale: new Vec3(0.5, 0.5, 1) }, { easing: 'cubicOut' })
+				.to(0.5, { position: new Vec3(pos.x, pos.y, 0), scale: new Vec3(0.5, 0.5, 1) }, { easing: 'cubicOut' })
 				.call(() => {
 					this.node.scale = new Vec3(0, 0, 1);
 					this.label.getComponent(Label).string = this.content;

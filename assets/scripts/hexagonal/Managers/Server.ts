@@ -5,11 +5,12 @@
 import Events from '../Misc/Events';
 import Config from './Config';
 import Signal from '../Misc/Signal';
+import { _decorator, Component, director } from 'cc';
 
-const { ccclass, property } = cc._decorator;
+const { ccclass, property } = _decorator;
 
 @ccclass
-export default class Server extends cc.Component {
+export default class Server extends Component {
 	static $: Server = null;
 
 	ws: WebSocket = null;
@@ -49,13 +50,13 @@ export default class Server extends cc.Component {
 
 	onOpen() {
 		director.emit(Events.TIP);
-		cc.log('Connected to the server!');
+		console.log('Connected to the server!');
 		this.send(Signal.MATCH, { level: 0 });
 	}
 
 	onClose() {
 		director.emit(Events.TIP, { message: 'Disconnected from server!' });
-		cc.log('Disconnected from the server!');
+		console.log('Disconnected from the server!');
 		this.ws.removeEventListener('open', this.onOpen.bind(this));
 		this.ws.removeEventListener('message', this.onMessage.bind(this));
 		this.ws.removeEventListener('close', this.onClose.bind(this));
@@ -65,11 +66,11 @@ export default class Server extends cc.Component {
 	onMessage({ data }) {
 		let pack = JSON.parse(atob(data));
 		director.emit(pack.signal, pack.data);
-		cc.log('%cRECEIVE:', 'color:#4A3;', pack.signal, pack.data);
+		console.log('%cRECEIVE:', 'color:#4A3;', pack.signal, pack.data);
 	}
 
 	send(signal: string, data?: any) {
-		cc.log('%cSENDING:', 'color:#36F;', signal, data);
+		console.log('%cSENDING:', 'color:#36F;', signal, data);
 		this.ws.send(btoa(JSON.stringify({ signal, data })));
 	}
 

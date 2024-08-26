@@ -12,7 +12,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass
 export default class Footer extends Component {
-	label:Label = null;
+	label: Label = null;
 	leftLabel: Label = null;
 	rightLabel: Label = null;
 
@@ -32,8 +32,8 @@ export default class Footer extends Component {
 	}
 
 	onCorrect({ me, word }) {
-		let label = me ? this.leftLabel : this.rightLabel;
-		label.string = word + '\n' + label.string;
+		let label = me ? this.rightLabel : this.rightLabel;
+		// label.string = word + '\n' + label.string;
 	}
 
 	onGameStart() {

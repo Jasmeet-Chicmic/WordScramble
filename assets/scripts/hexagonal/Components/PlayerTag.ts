@@ -2,7 +2,7 @@
  * Player's tag, name, avartar and score
  * @author wheatup
  */
-import { _decorator, Component, director, Label } from "cc";
+import { _decorator, Component, director, Label, Node } from "cc";
 import Events from "../Misc/Events";
 
 const { ccclass, property } = _decorator;
@@ -14,6 +14,7 @@ export default class PlayerTag extends Component {
 
 	static me: PlayerTag = null;
 	static opponent: PlayerTag = null;
+
 
 	@property
 	me: boolean = false;

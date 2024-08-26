@@ -38,12 +38,18 @@ export default class Timer extends Component {
 				clearInterval(this.timer);
 				this.timer = null;
 				if (!HexagonManager.$.online) {
-					let result = { interrupted: false, score: {} };
-					result.score[Server.$.pid] = {};
-					result.score[Server.$.pid + 1] = {};
-					result.score[Server.$.pid].score = PlayerTag.me.score;
-					result.score[Server.$.pid + 1].score = 0;
-					director.emit(Signal.RESULT, result);
+					// let result = { interrupted: false, score: {} };
+					// console.log(Server);
+
+					// result.score[Server.$.pid] = {};
+					// result.score[Server.$.pid + 1] = {};
+					// result.score[Server.$.pid].score = PlayerTag.me.score;
+					// result.score[Server.$.pid + 1].score = 0;
+					// director.emit(Signal.RESULT, result);
+					director.emit(Events.TIP, { message: 'GameOver!' });
+					setTimeout(() => {
+						director.emit(Events.MAIN_MENU);
+					}, 2000);
 				}
 			}
 			this.label.string = this.time + '';

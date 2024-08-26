@@ -24,6 +24,7 @@ export default class MenuView extends Component {
 		director.on(Events.GAME_START, this.hide, this);
 		director.on(Events.LOST_CONNECTION, this.show, this);
 		director.on(Events.MAIN_MENU, this.show, this);
+
 	}
 
 	onDestroy() {
@@ -39,6 +40,7 @@ export default class MenuView extends Component {
 		this.node.active = true;
 		this.btnOffline.getComponent(Button).interactable = false;
 		this.btnOnline.getComponent(Button).interactable = false;
+
 	}
 
 	onClickPlayOffline() {
