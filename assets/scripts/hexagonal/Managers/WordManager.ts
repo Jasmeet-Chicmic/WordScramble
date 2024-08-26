@@ -84,6 +84,7 @@ export default class WordManager extends Component {
 
 		let consonants = [0, 1, 2, 3, 4, 11, 12, 13, 14, 15, 16, 17, 26, 27, 28, 29, 30, 31, 32, 33, 34, 43, 44, 45, 46, 47, 48, 49, 56, 57, 58, 59, 60];
 
+
 		for (let id of ids) {
 			let dict =
 				Math.random() < 0.9
@@ -93,8 +94,13 @@ export default class WordManager extends Component {
 					: consonants.indexOf(id) >= 0
 						? this.lettersChartVowel
 						: this.lettersChartConsonant;
+
+
+
 			letters += dict[Math.floor(dict.length * Math.random())];
 		}
+
+
 		return letters;
 	}
 }

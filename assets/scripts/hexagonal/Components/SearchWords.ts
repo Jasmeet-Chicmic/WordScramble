@@ -1,4 +1,4 @@
-import { _decorator, Component, director, instantiate, Node, Prefab } from 'cc';
+import { _decorator, Component, director, instantiate, Node, Prefab, ScrollView, ScrollViewComponent } from 'cc';
 import Events from '../Misc/Events';
 import { CorrectName } from './CorrectName';
 const { ccclass, property } = _decorator;
@@ -7,6 +7,8 @@ const { ccclass, property } = _decorator;
 export class SearchWords extends Component {
     @property({ type: Node })
     content = null;
+    @property({ type: Node })
+    scrollview = null;
 
     @property({ type: Prefab })
     correctWord: Prefab = null;
@@ -18,8 +20,10 @@ export class SearchWords extends Component {
     }
     onCorrect({ me, word }) {
         const wordNode = instantiate(this.correctWord);
+
         wordNode.getComponent(CorrectName).setWord(word);
-        this.content.addChild(wordNode)
+        this.content.addChild(wordNode);
+        this.scrollview.getComponent(ScrollView).scrollToBottom(1)
     }
     update(deltaTime: number) {
 

@@ -46,7 +46,7 @@ export default class Timer extends Component {
 					// result.score[Server.$.pid].score = PlayerTag.me.score;
 					// result.score[Server.$.pid + 1].score = 0;
 					// director.emit(Signal.RESULT, result);
-					director.emit(Events.TIP, { message: 'GameOver!' });
+					director.emit(Events.TIP, { message: 'Time Over!' });
 					setTimeout(() => {
 						director.emit(Events.MAIN_MENU);
 					}, 2000);

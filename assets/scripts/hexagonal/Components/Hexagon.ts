@@ -2,7 +2,7 @@
  * Hexagon behavior
  * @author wheatup
  */
-import { _decorator, Color, Component, easing, Label, Node, Sprite, Tween, tween, UITransform, Vec2, Vec3 } from 'cc';
+import { _decorator, Color, Component, easing, Label, Node, randomRangeInt, Sprite, Tween, tween, UITransform, Vec2, Vec3 } from 'cc';
 import PlayerTag from './PlayerTag';
 
 const { ccclass, property } = _decorator;
@@ -74,12 +74,12 @@ export default class Hexagon extends Component {
 	setColumnAndRow(column: number, row: number) {
 		this.column = column;
 		this.row = row;
-		this.brightness = column % 2 === 0 ? 1 : 0.95;
+		this.brightness = 1;
 
 		this.color = new Color(this.color.r * this.brightness, this.color.g * this.brightness, this.color.r * this.brightness, 255);
 		this.normalColor = new Color(this.normalColor.r * this.brightness, this.normalColor.g * this.brightness, this.normalColor.r * this.brightness, 255);
-		this.activateColor = new Color(this.activateColor.r * this.brightness, this.activateColor.g * this.brightness, this.activateColor.r * this.brightness, 255);
-		this.incorrectColor = new Color(this.incorrectColor.r * this.brightness, this.incorrectColor.g * this.brightness, this.incorrectColor.r * this.brightness, 255);
+		this.activateColor = new Color(randomRangeInt(0, 255), randomRangeInt(0, 255), randomRangeInt(0, 255), 255);;
+		this.incorrectColor = new Color(255, 0, 0, 255);
 		this.correctColor = new Color(this.correctColor.r * this.brightness, this.correctColor.g * this.brightness, this.correctColor.r * this.brightness, 255);
 
 		this.textColor = new Color(this.textColor.r * this.brightness, this.textColor.g * this.brightness, this.textColor.r * this.brightness, 255);
@@ -94,7 +94,7 @@ export default class Hexagon extends Component {
 
 	setContent(content: string) {
 		this.content = content;
-		this.label.getComponent(Label).string = content;
+		this.label.getComponent(Label).string = content.toUpperCase();
 	}
 
 	update() {
@@ -188,7 +188,7 @@ export default class Hexagon extends Component {
 			this.locked = true;
 			this.content = replace;
 			this.node.setPosition(new Vec3(this.orgPos.x, this.node.getPosition().y));
-			console.log(PlayerTag.me);
+
 
 			let posMe = this.node.parent.getComponent(UITransform).convertToNodeSpaceAR(PlayerTag.me.node.parent.getComponent(UITransform).convertToWorldSpaceAR(PlayerTag.me.node.getPosition()));
 			// let posOpponent = this.node.parent.getComponent(UITransform).convertToNodeSpaceAR(PlayerTag.opponent.node.parent.getComponent(UITransform).convertToWorldSpaceAR(PlayerTag.opponent.node.getPosition()));

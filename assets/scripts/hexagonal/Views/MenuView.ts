@@ -18,8 +18,9 @@ export default class MenuView extends Component {
 	btnOnline: Node = null;
 
 	onLoad() {
-		this.btnOffline.on(Node.EventType.TOUCH_END, this.onClickPlayOffline, this);
-		this.btnOnline.on(Node.EventType.TOUCH_END, this.onClickPlayOnline, this);
+
+		// this.btnOffline.on(Node.EventType.TOUCH_END, this.onClickPlayOffline, this);
+		// this.btnOnline.on(Node.EventType.TOUCH_END, this.onClickPlayOnline, this);
 		director.on(Events.GAME_READY, this.onGameReady, this);
 		director.on(Events.GAME_START, this.hide, this);
 		director.on(Events.LOST_CONNECTION, this.show, this);
@@ -28,8 +29,8 @@ export default class MenuView extends Component {
 	}
 
 	onDestroy() {
-		this.btnOffline.off(Node.EventType.TOUCH_END, this.onClickPlayOffline, this);
-		this.btnOnline.off(Node.EventType.TOUCH_END, this.onClickPlayOnline, this);
+		// this.btnOffline.off(Node.EventType.TOUCH_END, this.onClickPlayOffline, this);
+		// this.btnOnline.off(Node.EventType.TOUCH_END, this.onClickPlayOnline, this);
 		director.off(Events.GAME_READY, this.onGameReady, this);
 		director.off(Events.GAME_START, this.hide, this);
 		director.off(Events.LOST_CONNECTION, this.show, this);
@@ -38,8 +39,9 @@ export default class MenuView extends Component {
 
 	start() {
 		this.node.active = true;
-		this.btnOffline.getComponent(Button).interactable = false;
-		this.btnOnline.getComponent(Button).interactable = false;
+		// this.btnOffline.getComponent(Button).interactable = false;
+		// this.btnOnline.getComponent(Button).interactable = false;
+		GameManager.$.playOffline();
 
 	}
 
@@ -68,5 +70,10 @@ export default class MenuView extends Component {
 
 	hide() {
 		this.node.active = false;
+	}
+
+	back() {
+
+		director.loadScene("lobby")
 	}
 }

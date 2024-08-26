@@ -130,7 +130,7 @@ export default class HexagonManager extends Component {
 		let position = e.getUILocation()
 		let pos = this.node.getComponent(UITransform).convertToNodeSpaceAR(new Vec3(position.x, position.y, 0));
 		let hexagon = this.getHexagonByPosition(new Vec2(position.x, position.y));
-		console.log(hexagon);
+		// console.log(hexagon);
 		this.addToChain(hexagon);
 	}
 

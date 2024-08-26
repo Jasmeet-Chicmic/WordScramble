@@ -46,6 +46,6 @@ export default class Footer extends Component {
 	onChain(chain: Node[]) {
 		let text = '';
 		chain.forEach(hexagon => text += hexagon.getComponent(Hexagon).content);
-		this.label.string = text;
+		this.label.string = text.toUpperCase();;
 	}
 }
