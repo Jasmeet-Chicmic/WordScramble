@@ -3,30 +3,30 @@
  * @author wheatup
  */
 
-import { director } from 'cc';
+import { _decorator, Component, director, Label, Node } from 'cc';
 import Events from '../Misc/Events';
 
-const { ccclass, property } = cc._decorator;
+const { ccclass, property } = _decorator;
 
 @ccclass
-export default class TipView extends cc.Component {
-	background: cc.Node = null;
-	label: cc.Label = null;
+export default class TipView extends Component {
+	background: Node = null;
+	label: Label = null;
 
 	showing: boolean = false;
 	timer = null;
 
 	onLoad() {
 		this.background = this.node.getChildByName('BG');
-		this.label = this.node.getChildByName('Label').getComponent(cc.Label);
+		this.label = this.node.getChildByName('Label').getComponent(Label);
 		director.on(Events.TIP, this.onTip, this);
-		this.node.on(cc.Node.EventType.TOUCH_START, this.onTouch, this);
+		this.node.on(Node.EventType.TOUCH_START, this.onTouch, this);
 		this.node.active = false;
 	}
 
 	onDestroy() {
 		director.off(Events.TIP, this.onTip, this);
-		this.node.off(cc.Node.EventType.TOUCH_START, this.onTouch, this);
+		this.node.off(Node.EventType.TOUCH_START, this.onTouch, this);
 	}
 
 	onTouch() {

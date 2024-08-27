@@ -23,6 +23,9 @@ export default class Timer extends Component {
 	}
 
 	onDestroy() {
+		if (this.timer) {
+			clearInterval(this.timer);
+		}
 		director.off(Events.GAME_START, this.onGameStart, this);
 	}
 

@@ -197,7 +197,7 @@ export default class HexagonManager extends Component {
 		this.letters = text;
 		this.layers = level + 4;
 		this.buildHexagons();
-		director.emit(Events.TIP, { message: 'Game Start!', time: 1000 });
+		// director.emit(Events.TIP, { message: 'Game Start!', time: 1000 });
 		this.controllable = true;
 		this.clearChain();
 	}

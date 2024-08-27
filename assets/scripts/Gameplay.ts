@@ -20,12 +20,16 @@ export class Gameplay extends Component {
 
     playAgain() {
         this.loader.getComponent(CircularLoader).showLoader();
-        director.off(GameEvent.ON_SELECT);
+
         director.loadScene("gameplay", () => {
 
         })
     }
 
+    goBack() {
+        director.off(GameEvent.ON_SELECT);
+        director.loadScene("lobby")
+    }
 
     update(deltaTime: number) {
 
